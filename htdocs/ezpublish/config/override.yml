@@ -1,0 +1,13 @@
+ezpublish:
+    system:
+        ezdemo_site_user:
+            location_view:
+                full:
+                    blog:
+                        template: BlendPartialContentBundle:full:blog.html.twig
+                        match:
+                            Identifier\ContentType: blog
+                    blog_post:
+                        template: BlendPartialContentBundle:full:blog_post.html.twig
+                        match:
+                            Identifier\ContentType: blog_post
