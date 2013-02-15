@@ -10,6 +10,16 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
+    {% stylesheets "bundles/blendpartialcontent/css/*" %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% javascripts
+        "bundles/blendpartialcontent/js/modernizr.js"
+        "bundles/blendpartialcontent/js/bootstrap.js"
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 </head>
 <body>
 <!--[if lt IE 7]>
@@ -55,6 +65,10 @@
     {% endblock %}
 </footer>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-
+{% javascripts
+"bundles/blendpartialcontent/js/main.js"
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
 </body>
 </html>
