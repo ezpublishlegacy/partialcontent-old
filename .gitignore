@@ -1,0 +1,5 @@
+.idea
+/logs/*
+/htdocs/ezpublish_legacy/var/*
+/htdocs/ezpublish/logs/*
+/htdocs/ezpublish/cache/*
