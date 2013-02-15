@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /
+
+#Setting robots.txt in this archive to block everything so people installing this site to follow the tutorial
+#don't wind up screwing my blog in Google.
+#If you use this as the basis of your own project, remove this.
