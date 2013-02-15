@@ -10,6 +10,7 @@ ActiveExtensions[]=ezoe
 ActiveExtensions[]=ezformtoken
 ActiveExtensions[]=ezstarrating
 ActiveExtensions[]=ezgmaplocation
+ActiveExtensions[]=partialcontent
 ActiveExtensions[]=ezdemo
 ActiveExtensions[]=ezwt
 ActiveExtensions[]=ezflow
