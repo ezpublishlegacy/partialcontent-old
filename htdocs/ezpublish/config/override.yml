@@ -11,3 +11,8 @@ ezpublish:
                         template: BlendPartialContentBundle:full:blog_post.html.twig
                         match:
                             Identifier\ContentType: blog_post
+                summary:
+                    blog_post:
+                        template: BlendPartialContentBundle:summary:blog_post.html.twig
+                        match:
+                            Identifier\ContentType: blog_post

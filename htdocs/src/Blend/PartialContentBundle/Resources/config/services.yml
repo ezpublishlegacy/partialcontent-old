@@ -1,7 +1,12 @@
 parameters:
-#    blend_partial_content.example.class: Blend\PartialContentBundle\Example
+    blend_partial_content.blogcontroller.class: Blend\PartialContentBundle\Controller\BlogController
 
 services:
-#    blend_partial_content.example:
-#        class: %blend_partial_content.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    blend_partial_content.controller:
+        class: %blend_partial_content.blogcontroller.class%
+        arguments: [@ezpublish.view_manager]
+        calls:
+            - [ setContainer, [@service_container] ]
+
+    pcblog:
+        alias: blend_partial_content.controller

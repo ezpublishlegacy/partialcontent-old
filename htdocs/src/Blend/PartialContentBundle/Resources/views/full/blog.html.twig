@@ -1,15 +1,21 @@
+{# This template extends pagelayout.html.twig and just replaces the 'content' block #}
 {% extends noLayout ? viewbaseLayout : "BlendPartialContentBundle::pagelayout.html.twig" %}
 {% block content %}
+    {# The 'location' variable contains info about the current position in the site and some metadata #}
     <h1 class="page-title">{{ location.contentInfo.name }}</h1>
     <article class="extra description">
+        {# The 'content' variable contains the content object we're viewing #}
+        {# ez_render_field is a twig helper function that uses either twig or legacy templates to render the
+           data from the field
+        #}
         {{ ez_render_field( content, "description" ) }}
     </article>
-
-    {# % render "joeblog:postsByDate" with
-    {
-    'viewType':'summary',
-    'subTreeLocationId':location.id
-    },
-    {'standalone':true}
-    % #}
+    {# 'render' sends a subrequest into symfony and displays the result of the controller action it calls #}
+    {% render "pcblog:postsByDate" with
+        {
+            'viewType':'summary',
+            'subTreeLocationId':location.id
+        },
+        {'standalone':true}
+    %}
 {% endblock %}
