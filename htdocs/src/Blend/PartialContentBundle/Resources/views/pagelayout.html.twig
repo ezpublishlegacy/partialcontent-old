@@ -1,3 +1,4 @@
+{# Base HTML based on HTML Boilerplate and Twitter Bootstrap #}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -16,6 +17,8 @@
 <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 <![endif]-->
 <header class="main-header">
+    {# The block defines a piece of the template that can be overridden by other templates #}
+    {# See http://twig.sensiolabs.org/doc/templates.html#template-inheritance #}
     {% block header %}
         <div class="branding jumbotron subhead">
             <div class="container">
@@ -25,6 +28,7 @@
         <nav class="navbar navbar-inverse">
             <div class="navbar-inner">
                 <div class="container">
+                    {# You can nest blocks #}
                     {% block topnav %}
                         Top Menu will go here
                     {% endblock %}
@@ -38,6 +42,7 @@
     <div class="body">
         <div class="row">
             <div class="main span9">
+                {# eZ Publish uses the 'content' block as the main content of the page #}
                 {% block content %}{% endblock %}
             </div>
             <aside class="sidebar span3">
