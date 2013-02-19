@@ -1,8 +1,8 @@
 {% extends noLayout ? viewbaseLayout : "BlendPartialContentBundle::pagelayout.html.twig" %}
 {% block content %}
-    <article class="body" about="{{ path(location) }}">
-        <h1 class="page-title" property="title">{{ location.contentInfo.name }}</h1>
-        <div property="body">
+    <article class="body">
+        <h1 class="page-title">{{ location.contentInfo.name }}</h1>
+        <div>
             {{ ez_render_field( content, "body" ) }}
         </div>
     </article>
