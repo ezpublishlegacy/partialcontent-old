@@ -5,3 +5,15 @@
         {'standalone': true}
     %}
 {% endfor %}
+{% if navigator %}
+    {% include "BlendPartialContentBundle::navigator.html.twig" with
+    {
+        'total': total,
+        'url': path( paginationRoot ),
+        'offset': offset,
+        'limit': limit,
+        'next': next,
+        'prev': prev
+    }
+    %}
+{% endif %}

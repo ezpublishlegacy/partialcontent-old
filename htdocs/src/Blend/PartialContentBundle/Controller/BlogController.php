@@ -24,7 +24,7 @@ class BlogController extends APIViewController
      * @param bool $navigator Whether to render a paginator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postsByDate($subTreeLocationId, $viewType='summary', $limit=20, $offset=0, $navigator=true)
+    public function postsByDate($subTreeLocationId, $viewType='summary', $limit=10, $offset=0, $navigator=true)
     {
         //Retrieve the location service from the Symfony container
         $locationService = $this->getRepository()->getLocationService();
@@ -81,6 +81,9 @@ class BlogController extends APIViewController
                 'posts' => $posts,
                 'viewType' => $viewType,
                 'navigator' => (bool) $navigator,
+                'limit' => $limit,
+                'next' => 'Older',
+                'prev' => 'Newer'
             ),
             $response
         );

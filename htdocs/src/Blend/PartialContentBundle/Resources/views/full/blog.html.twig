@@ -1,6 +1,8 @@
 {# This template extends pagelayout.html.twig and just replaces the 'content' block #}
 {% extends noLayout ? viewbaseLayout : "BlendPartialContentBundle::pagelayout.html.twig" %}
 {% block content %}
+    {# Determine the post offset (page) #}
+    {% set offset = app.request.attributes.get( 'viewParameters' ).offset ?: 0 %}
     {# The 'location' variable contains info about the current position in the site and some metadata #}
     <h1 class="page-title">{{ location.contentInfo.name }}</h1>
     <article class="extra description">
@@ -14,7 +16,8 @@
     {% render "pcblog:postsByDate" with
         {
             'viewType':'summary',
-            'subTreeLocationId':location.id
+            'subTreeLocationId':location.id,
+            'offset':offset
         },
         {'standalone':true}
     %}
