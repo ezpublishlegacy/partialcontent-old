@@ -26,33 +26,20 @@ class BlogController extends APIViewController
      */
     public function postsByDate($subTreeLocationId, $viewType='summary', $limit=20, $offset=0, $navigator=true)
     {
+        //Retrieve the location service from the Symfony container
         $locationService = $this->getRepository()->getLocationService();
+
+        //Load the called location (node) from the repository based on the ID
         $root = $locationService->loadLocation( $subTreeLocationId );
 
-        $response = $this->buildResponse(
-            __METHOD__ . $subTreeLocationId,
-            $root->contentInfo->modificationDate
-        );
-        $response->headers->set( 'X-Location-Id', $subTreeLocationId );
-        if ( $response->isNotModified( $this->getRequest() ) )
-        {
-            return $response;
-        }
-        /*
-        $results = $this->fetchSubTree(
-            $subTreeLocationId,
-            array( 'blog_post' ),
-            array( new SortClause\Field( 'blog_post', 'date', Query::SORT_DESC ) ),
-            $limit,
-            $offset
-        );
-        */
+        //Get the modification time from the content object
+        $modificationDate = $root->contentInfo->modificationDate;
 
         //Retrieve a subtree fetch of the latest posts
         $postResults = $this->fetchSubTree(
             $root,
             array('blog_post'),
-            array(new SortClause\LocationPriority()),
+            array(new SortClause\Field('blog_post','publication_date',Query::SORT_DESC)),
             $limit,
             $offset
         );
@@ -63,6 +50,24 @@ class BlogController extends APIViewController
         {
             $posts[] = $hit->valueObject;
 
+            //If any of the posts is newer than the root, use that post's modification date
+            if ($hit->valueObject->contentInfo->modificationDate > $modificationDate) {
+                $modificationDate = $hit->valueObject->contentInfo->modificationDate;
+            }
+        }
+
+        //Set the etag and modification date on the response
+        $response = $this->buildResponse(
+            __METHOD__ . $subTreeLocationId,
+            $modificationDate
+        );
+
+        $response->headers->set( 'X-Location-Id', $subTreeLocationId );
+
+        //If nothing has been modified, return a 304
+        if ( $response->isNotModified( $this->getRequest() ) )
+        {
+            return $response;
         }
 
         //Render the output
