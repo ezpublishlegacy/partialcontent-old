@@ -104,7 +104,6 @@ class BlogController extends APIViewController
         if (!count($contentTypeIdentifiers)) {
             $contentTypeIdentifiers = $this->getConfigResolver()->getParameter('menu_content_types', 'partialcontent');
         }
-        echo "[[$selected]]";
 
         //Retrieve the location service from the Symfony container
         $locationService = $this->getRepository()->getLocationService();

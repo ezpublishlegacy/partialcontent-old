@@ -4,3 +4,5 @@
 /htdocs/ezpublish_legacy/var/*
 /htdocs/ezpublish/logs/*
 /htdocs/ezpublish/cache/*
+/htdocs/web/css/*.css
+/htdocs/web/js/*.js
