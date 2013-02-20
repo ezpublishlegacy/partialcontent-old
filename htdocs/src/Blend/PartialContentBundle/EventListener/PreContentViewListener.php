@@ -37,16 +37,9 @@ class PreContentViewListener
     {
         $surroundTypeIdentifier = $this->configResolver->getParameter('surround_type', 'partialcontent');
 
-        //Get the type id based on the identifier (this will be unnecessary in the next community release)
-        $surroundTypeId = $this
-            ->repository
-            ->getContentTypeService()
-            ->loadContentTypeByIdentifier( $surroundTypeIdentifier )
-            ->id;
-
         //Retrieve the surround object
         $searchService = $this->repository->getSearchService();
-        $surround = $searchService->findSingle( new Criterion\ContentTypeId($surroundTypeId) );
+        $surround = $searchService->findSingle( new Criterion\ContentTypeIdentifier($surroundTypeIdentifier) );
 
         $contentView = $event->getContentView();
         $contentView->addParameters(array('surround' => $surround));
