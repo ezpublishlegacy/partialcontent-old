@@ -1,3 +1,5 @@
 parameters:
     secret: ThisTokenIsNotSoSecretChangeIt
     ezpublish_legacy.view.default_layout: BlendPartialContentBundle::pagelayout.html.twig
+
+    partialcontent.default.surround_type: template_look
