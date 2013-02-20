@@ -27,6 +27,7 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
     private $javaPath;
     private $charset;
     private $lineBreak;
+    private $stackSize;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
@@ -44,6 +45,11 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $this->lineBreak = $lineBreak;
     }
 
+    public function setStackSize($stackSize)
+    {
+        $this->stackSize = $stackSize;
+    }
+
     public function filterLoad(AssetInterface $asset)
     {
     }
@@ -59,11 +65,13 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
      */
     protected function compress($content, $type, $options = array())
     {
-        $pb = $this->createProcessBuilder(array(
-            $this->javaPath,
-            '-jar',
-            $this->jarPath,
-        ));
+        $pb = $this->createProcessBuilder(array($this->javaPath));
+
+        if (null !== $this->stackSize) {
+            $pb->add('-Xss'.$this->stackSize);
+        }
+
+        $pb->add('-jar')->add($this->jarPath);
 
         foreach ($options as $option) {
             $pb->add($option);

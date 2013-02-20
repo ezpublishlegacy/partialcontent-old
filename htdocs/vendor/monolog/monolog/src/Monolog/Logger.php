@@ -13,6 +13,8 @@ namespace Monolog;
 
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;
+use Psr\Log\LoggerInterface;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * Monolog log channel
@@ -22,7 +24,7 @@ use Monolog\Handler\StreamHandler;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class Logger
+class Logger implements LoggerInterface
 {
     /**
      * Detailed debug information
@@ -107,10 +109,6 @@ class Logger
     public function __construct($name)
     {
         $this->name = $name;
-
-        if (!static::$timezone) {
-            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
-        }
     }
 
     /**
@@ -185,6 +183,11 @@ class Logger
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
         }
+
+        if (!static::$timezone) {
+            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        }
+
         $record = array(
             'message' => (string) $message,
             'context' => $context,
@@ -206,6 +209,7 @@ class Logger
         if (null === $handlerKey) {
             return false;
         }
+
         // found at least one, process message and dispatch it
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
@@ -323,7 +327,7 @@ class Logger
     public static function getLevelName($level)
     {
         if (!isset(static::$levels[$level])) {
-            throw new \InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
         }
 
         return static::$levels[$level];
@@ -338,13 +342,7 @@ class Logger
     public function isHandling($level)
     {
         $record = array(
-            'message' => '',
-            'context' => array(),
             'level' => $level,
-            'level_name' => static::getLevelName($level),
-            'channel' => $this->name,
-            'datetime' => new \DateTime('now', static::$timezone),
-            'extra' => array(),
         );
 
         foreach ($this->handlers as $key => $handler) {
@@ -354,6 +352,25 @@ class Logger
         }
 
         return false;
+    }
+
+    /**
+     * Adds a log record at an arbitrary level.
+     *
+     * This method allows for compatibility with common interfaces.
+     *
+     * @param  mixed   $level   The log level
+     * @param  string  $message The log message
+     * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
+     */
+    public function log($level, $message, array $context = array())
+    {
+        if (is_string($level) && defined(__CLASS__.'::'.strtoupper($level))) {
+            $level = constant(__CLASS__.'::'.strtoupper($level));
+        }
+
+        return $this->addRecord($level, $message, $context);
     }
 
     /**
@@ -413,6 +430,20 @@ class Logger
     }
 
     /**
+     * Adds a log record at the WARNING level.
+     *
+     * This method allows for compatibility with common interfaces.
+     *
+     * @param  string  $message The log message
+     * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
+     */
+    public function warning($message, array $context = array())
+    {
+        return $this->addRecord(static::WARNING, $message, $context);
+    }
+
+    /**
      * Adds a log record at the ERROR level.
      *
      * This method allows for compatibility with common interfaces.
@@ -427,6 +458,20 @@ class Logger
     }
 
     /**
+     * Adds a log record at the ERROR level.
+     *
+     * This method allows for compatibility with common interfaces.
+     *
+     * @param  string  $message The log message
+     * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
+     */
+    public function error($message, array $context = array())
+    {
+        return $this->addRecord(static::ERROR, $message, $context);
+    }
+
+    /**
      * Adds a log record at the CRITICAL level.
      *
      * This method allows for compatibility with common interfaces.
@@ -436,6 +481,20 @@ class Logger
      * @return Boolean Whether the record has been processed
      */
     public function crit($message, array $context = array())
+    {
+        return $this->addRecord(static::CRITICAL, $message, $context);
+    }
+
+    /**
+     * Adds a log record at the CRITICAL level.
+     *
+     * This method allows for compatibility with common interfaces.
+     *
+     * @param  string  $message The log message
+     * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
+     */
+    public function critical($message, array $context = array())
     {
         return $this->addRecord(static::CRITICAL, $message, $context);
     }
@@ -464,6 +523,20 @@ class Logger
      * @return Boolean Whether the record has been processed
      */
     public function emerg($message, array $context = array())
+    {
+        return $this->addRecord(static::EMERGENCY, $message, $context);
+    }
+
+    /**
+     * Adds a log record at the EMERGENCY level.
+     *
+     * This method allows for compatibility with common interfaces.
+     *
+     * @param  string  $message The log message
+     * @param  array   $context The log context
+     * @return Boolean Whether the record has been processed
+     */
+    public function emergency($message, array $context = array())
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }

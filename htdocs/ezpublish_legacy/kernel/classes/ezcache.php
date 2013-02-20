@@ -2,9 +2,9 @@
 /**
  * File containing the {@link eZCache} class
  *
- * @copyright Copyright (C) 1999-2012 eZ Systems AS. All rights reserved.
+ * @copyright Copyright (C) 1999-2013 eZ Systems AS. All rights reserved.
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
- * @version  2012.12
+ * @version  2013.1
  * @package kernel
  */
 
@@ -185,6 +185,14 @@ class eZCache
                                        'expiry-key' => 'ts-translation-cache',
                                        'path' => 'translation',
                                        'function' => array( 'eZCache', 'clearTSTranslationCache' )
+                                ),
+                                array( 'name' => ezpI18n::tr( 'kernel/cache', 'SSL Zones cache' ),
+                                       'id' => 'sslzones',
+                                       'tag' => array( 'ini' ),
+                                       'enabled' => eZSSLZone::enabled(),
+                                       'path' => false,
+                                       'function' => array( 'eZSSLZone', 'clearCache' ),
+                                       'purge-function' => array( 'eZSSLZone', 'clearCache' )
                                 ),
             );
 

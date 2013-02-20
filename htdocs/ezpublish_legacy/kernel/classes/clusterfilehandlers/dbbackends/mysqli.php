@@ -2,9 +2,9 @@
 /**
  * File containing the eZDBFileHandlerMysqliBackend class.
  *
- * @copyright Copyright (C) 1999-2012 eZ Systems AS. All rights reserved.
+ * @copyright Copyright (C) 1999-2013 eZ Systems AS. All rights reserved.
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
- * @version  2012.12
+ * @version  2013.1
  * @package kernel
  */
 
@@ -813,7 +813,7 @@ class eZDBFileHandlerMysqliBackend
                                            'size' => $contentLength,
                                            'mtime' => $curTime,
                                            'expired' => ($curTime < 0) ? 1 : 0 ),
-                                    "datatype=VALUES(datatype), name_trunk='$nameTrunk', scope=VALUES(scope), size=VALUES(size), mtime=VALUES(mtime), expired=VALUES(expired)",
+                                    "datatype=VALUES(datatype), name_trunk=VALUES(name_trunk), scope=VALUES(scope), size=VALUES(size), mtime=VALUES(mtime), expired=VALUES(expired)",
                                    $fname ) === false )
         {
             return $this->_fail( "Failed to insert file metadata while storing contents. Possible race condition" );

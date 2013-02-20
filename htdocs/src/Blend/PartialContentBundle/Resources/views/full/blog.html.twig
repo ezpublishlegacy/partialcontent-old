@@ -13,12 +13,23 @@
         {{ ez_render_field( content, "description" ) }}
     </article>
     {# 'render' sends a subrequest into symfony and displays the result of the controller action it calls #}
-    {% render "pcblog:postsByDate" with
+
+    {{ render(
+        controller(
+            "pcblog:postsByDate",
+            {
+                'viewType':'summary',
+                'subTreeLocationId':location.id,
+                'offset':offset
+            }
+        )
+    ) }}
+    {# % render "pcblog:postsByDate" with
         {
             'viewType':'summary',
             'subTreeLocationId':location.id,
             'offset':offset
         },
         {'standalone':true}
-    %}
+    % #}
 {% endblock %}

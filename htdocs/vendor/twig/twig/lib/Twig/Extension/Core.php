@@ -157,6 +157,8 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('reverse', 'twig_reverse_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('length', 'twig_length_filter', array('needs_environment' => true)),
             new Twig_SimpleFilter('slice', 'twig_slice', array('needs_environment' => true)),
+            new Twig_SimpleFilter('first', 'twig_first', array('needs_environment' => true)),
+            new Twig_SimpleFilter('last', 'twig_last', array('needs_environment' => true)),
 
             // iteration and runtime
             new Twig_SimpleFilter('default', '_twig_default_filter', array('node_class' => 'Twig_Node_Expression_Filter_Default')),
@@ -184,10 +186,11 @@ class Twig_Extension_Core extends Twig_Extension
     {
         return array(
             new Twig_SimpleFunction('range', 'range'),
-            new Twig_SimpleFunction('constant', 'constant'),
+            new Twig_SimpleFunction('constant', 'twig_constant'),
             new Twig_SimpleFunction('cycle', 'twig_cycle'),
             new Twig_SimpleFunction('random', 'twig_random', array('needs_environment' => true)),
             new Twig_SimpleFunction('date', 'twig_date_converter', array('needs_environment' => true)),
+            new Twig_SimpleFunction('include', 'twig_include', array('needs_environment' => true, 'needs_context' => true)),
         );
     }
 
@@ -466,13 +469,15 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
 
     $asString = (string) $date;
     if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-        $date = new DateTime('@'.$date);
-        $date->setTimezone($defaultTimezone);
-
-        return $date;
+        $date = '@'.$date;
     }
 
-    return new DateTime($date, $defaultTimezone);
+    $date = new DateTime($date, $defaultTimezone);
+    if (false !== $timezone) {
+        $date->setTimezone($defaultTimezone);
+    }
+
+    return $date;
 }
 
 /**
@@ -625,6 +630,36 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
     }
 
     return null === $length ? substr($item, $start) : substr($item, $start, $length);
+}
+
+/**
+ * Returns the first element of the item.
+ *
+ * @param Twig_Environment $env  A Twig_Environment instance
+ * @param mixed            $item A variable
+ *
+ * @return mixed The first element of the item
+ */
+function twig_first(Twig_Environment $env, $item)
+{
+    $elements = twig_slice($env, $item, 0, 1, false);
+
+    return is_string($elements) ? $elements[0] : current($elements);
+}
+
+/**
+ * Returns the last element of the item.
+ *
+ * @param Twig_Environment $env  A Twig_Environment instance
+ * @param mixed            $item A variable
+ *
+ * @return mixed The last element of the item
+ */
+function twig_last(Twig_Environment $env, $item)
+{
+    $elements = twig_slice($env, $item, -1, 1, false);
+
+    return is_string($elements) ? $elements[0] : current($elements);
 }
 
 /**
@@ -1217,4 +1252,58 @@ function twig_test_empty($value)
 function twig_test_iterable($value)
 {
     return $value instanceof Traversable || is_array($value);
+}
+
+/**
+ * Renders a template.
+ *
+ * @param string  template       The template to render
+ * @param array   variables      The variables to pass to the template
+ * @param Boolean with_context   Whether to pass the current context variables or not
+ * @param Boolean ignore_missing Whether to ignore missing templates or not
+ * @param Boolean sandboxed      Whether to sandbox the template or not
+ *
+ * @return string The rendered template
+ */
+function twig_include(Twig_Environment $env, $context, $template, $variables = array(), $withContext = true, $ignoreMissing = false, $sandboxed = false)
+{
+    if ($withContext) {
+        $variables = array_merge($context, $variables);
+    }
+
+    if ($isSandboxed = $sandboxed && $env->hasExtension('sandbox')) {
+        $sandbox = $env->getExtension('sandbox');
+        if (!$alreadySandboxed = $sandbox->isSandboxed()) {
+            $sandbox->enableSandbox();
+        }
+    }
+
+    try {
+        return $env->resolveTemplate($template)->display($variables);
+    } catch (Twig_Error_Loader $e) {
+        if (!$ignoreMissing) {
+            throw $e;
+        }
+    }
+
+    if ($isSandboxed && !$alreadySandboxed) {
+        $sandbox->disableSandbox();
+    }
+}
+
+/**
+ * Provides the ability to get constants from instances as well as class/global constants.
+ *
+ * @param string      $constant The name of the constant
+ * @param null|object $object   The object to get the constant from
+ *
+ * @return string
+ */
+function twig_constant($constant, $object = null)
+{
+    if (null !== $object) {
+        $constant = get_class($object).'::'.$constant;
+    }
+
+    return constant($constant);
 }

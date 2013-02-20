@@ -6,6 +6,11 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Collator' => $baseDir . '/vendor/symfony/symfony/src/Symfony/Component/Locale/Resources/stubs/Collator.php',
+    'IntlDateFormatter' => $baseDir . '/vendor/symfony/symfony/src/Symfony/Component/Locale/Resources/stubs/IntlDateFormatter.php',
+    'Locale' => $baseDir . '/vendor/symfony/symfony/src/Symfony/Component/Locale/Resources/stubs/Locale.php',
+    'NumberFormatter' => $baseDir . '/vendor/symfony/symfony/src/Symfony/Component/Locale/Resources/stubs/NumberFormatter.php',
+    'SessionHandlerInterface' => $baseDir . '/vendor/symfony/symfony/src/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
     'ezcArchive' => $baseDir . '/vendor/zetacomponents/archive/src/archive.php',
     'ezcArchiveBlockFile' => $baseDir . '/vendor/zetacomponents/archive/src/file/block_file.php',
     'ezcArchiveBlockSizeException' => $baseDir . '/vendor/zetacomponents/archive/src/exceptions/block_size.php',

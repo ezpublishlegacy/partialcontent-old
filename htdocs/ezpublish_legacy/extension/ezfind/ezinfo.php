@@ -2,7 +2,7 @@
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Publish Community Project
-// SOFTWARE RELEASE:  2012.12
+// SOFTWARE RELEASE:  2013.1
 // COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2
 // NOTICE: >
@@ -38,7 +38,7 @@ class eZFindInfo
         return array(
             'Name' => "eZ Find",
             'Version' => '5.1.0-alpha1',
-            'Copyright' => "Copyright (C) 1999-2012 eZ Systems AS.",
+            'Copyright' => "Copyright (C) 1999-2013 eZ Systems AS.",
             'Info_url' => "http://ez.no/ezfind",
             'License' => "GNU General Public License v2",
             '3rdparty_software' =>

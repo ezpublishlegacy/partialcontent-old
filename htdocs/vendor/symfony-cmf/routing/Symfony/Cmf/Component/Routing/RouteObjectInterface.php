@@ -17,12 +17,14 @@ namespace Symfony\Cmf\Component\Routing;
 interface RouteObjectInterface
 {
     /**
-     * Constant for the field that is given to the ControllerAliasMapper.
-     * The value must be configured in the controllers_by_alias mapping.
-     *
-     * This is ignored if a _controller default value is provided as well
+     * Field name that will hold the route name that was matched.
      */
-    const CONTROLLER_ALIAS = '_controller_alias';
+    const ROUTE_NAME = '_route';
+
+    /**
+     * Field name of the route object that was matched.
+     */
+    const ROUTE_OBJECT = '_route_object';
 
     /**
      * Field name for an explicit controller name to be used with this route

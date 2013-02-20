@@ -3,9 +3,9 @@
  * File containing the ezie/prepare view
  * This view prepares an image for edition, and returns its information as JSON
  *
- * @copyright Copyright (C) 1999-2012 eZ Systems AS. All rights reserved.
+ * @copyright Copyright (C) 1999-2013 eZ Systems AS. All rights reserved.
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
- * @version 5.0.0
+ * @version 5.1.0-alpha1
  * @package ezie
  */
 

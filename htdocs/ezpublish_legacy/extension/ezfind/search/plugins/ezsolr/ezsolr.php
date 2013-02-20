@@ -2,7 +2,7 @@
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Publish Community Project
-// SOFTWARE RELEASE:  2012.12
+// SOFTWARE RELEASE:  2013.1
 // COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
 // EXTENDED COPYRIGHT NOTICE :
 //      Part of this class was inspired from the following contributors' work :
@@ -1279,7 +1279,7 @@ class eZSolr implements ezpSearchEngine
         $extensionInfo = ezpExtension::getInstance( 'ezfind' )->getInfo();
         return ezpI18n::tr(
             'ezfind',
-            'eZ Find %version search plugin &copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.6.1',
+            'eZ Find %version search plugin &copy; 1999-2013 eZ Systems AS, powered by Apache Solr 3.6.1',
             null,
             array( '%version' => $extensionInfo['version'] )
         );

@@ -217,7 +217,7 @@ the values you pass as arguments:
     {{ data|convert_encoding(from='iso-2022-jp', to='UTF-8') }}
 
 Named arguments also allow you to skip some arguments for which you don't want
-to change the default value::
+to change the default value:
 
 .. code-block:: jinja
 
@@ -446,6 +446,8 @@ By default, the ``escape`` filter uses the ``html`` strategy, but depending on
 the escaping context, you might want to explicitly use any other available
 strategies:
 
+.. code-block:: jinja
+
     {{ user.username|e('js') }}
     {{ user.username|e('css') }}
     {{ user.username|e('url') }}
@@ -489,7 +491,8 @@ expression:
 
     {{ '{{' }}
 
-For bigger sections it makes sense to mark a block :doc:`raw<tags/raw>`.
+For bigger sections it makes sense to mark a block
+:doc:`verbatim<tags/verbatim>`.
 
 Macros
 ------
@@ -566,8 +569,9 @@ exist:
 
 * ``"Hello World"``: Everything between two double or single quotes is a
   string. They are useful whenever you need a string in the template (for
-  example as arguments to function calls, filters or just to extend or
-  include a template).
+  example as arguments to function calls, filters or just to extend or include
+  a template). A string can contain a delimiter if it is preceded by a
+  backslash (``\``) -- like in ``'It\'s good'``.
 
 * ``42`` / ``42.23``: Integers and floating point numbers are created by just
   writing the number down. If a dot is present the number is a float,
@@ -722,8 +726,8 @@ tests.
 Other Operators
 ~~~~~~~~~~~~~~~
 
-.. versionadded:: 1.11.2
-    Support for the extended ternary operator was added in Twig 1.11.2.
+.. versionadded:: 1.12.0
+    Support for the extended ternary operator was added in Twig 1.12.0.
 
 The following operators are very useful but don't fit into any of the other
 categories:
@@ -746,7 +750,7 @@ categories:
 
       {{ foo ? 'yes' : 'no' }}
 
-      {# as of Twig 1.11.2 #}
+      {# as of Twig 1.12.0 #}
       {{ foo ?: 'no' }} == {{ foo ? foo : 'no' }}
       {{ foo ? 'yes' }} == {{ foo ? 'yes' : '' }}
 
