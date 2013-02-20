@@ -40,8 +40,13 @@ class PreContentViewListener
         //Retrieve the surround object
         $searchService = $this->repository->getSearchService();
         $surround = $searchService->findSingle( new Criterion\ContentTypeIdentifier($surroundTypeIdentifier) );
-
+        $header_image = $surround->getField('header_image');
         $contentView = $event->getContentView();
-        $contentView->addParameters(array('surround' => $surround));
+        $contentView->addParameters(
+            array(
+                'surround' => $surround,
+                'header_image' => $header_image
+            )
+        );
     }
 }

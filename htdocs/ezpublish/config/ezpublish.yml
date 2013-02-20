@@ -163,6 +163,11 @@ ezpublish:
                     reference: null
                     filters:
                         - { name: geometry/scaledownonly, params: [100, 80] }
+                headerimage:
+                    reference: original
+                    filters:
+                        - { name: geometry/scalewidthdownonly, params: [1920] }
+                        - { name: geometry/crop, params: [1920, 400, 0, 0] }
         ezdemo_site_admin:
             legacy_mode: true
             image_variations:
@@ -400,6 +405,11 @@ ezpublish:
                     reference: null
                     filters:
                         - { name: geometry/scaledownonly, params: [100, 80] }
+                headerimage:
+                    reference: original
+                    filters:
+                        - { name: geometry/scalewidthdownonly, params: [1920] }
+                        - { name: geometry/crop, params: [1920, 400, 0, 0] }
     imagemagick:
         enabled: true
         path: /usr/bin/convert

@@ -25,7 +25,14 @@
 <!--[if lt IE 7]>
 <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 <![endif]-->
-<header class="main-header">
+
+<header
+        class="main-header"
+        style="background-image: url('{% block header_image %}{% spaceless %}
+                {% set headerImage = ez_image_alias(header_image, surround.versionInfo, 'headerimage') %}
+                {{ path(headerImage.uri) }}
+                {% endspaceless %}{% endblock %}');"
+        >
     {# The block defines a piece of the template that can be overridden by other templates #}
     {# See http://twig.sensiolabs.org/doc/templates.html#template-inheritance #}
     {% block header %}
