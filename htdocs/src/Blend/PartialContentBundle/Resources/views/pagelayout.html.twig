@@ -39,7 +39,7 @@
                 <div class="container">
                     {# You can nest blocks #}
                     {% block topnav %}
-                        Top Menu will go here
+                        {{ render(controller("pcblog:menu", {'selected': location.id})) }}
                     {% endblock %}
                 </div>
             </div>

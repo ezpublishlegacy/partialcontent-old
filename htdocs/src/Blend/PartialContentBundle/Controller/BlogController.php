@@ -40,6 +40,7 @@ class BlogController extends APIViewController
             $root,
             array('blog_post'),
             array(new SortClause\Field('blog_post','publication_date',Query::SORT_DESC)),
+            true,
             $limit,
             $offset
         );
@@ -89,6 +90,71 @@ class BlogController extends APIViewController
         );
     }
 
+    public function menu(
+        $selected = null,
+        $subTreeLocationId = false,
+        $contentTypeIdentifiers = array()
+    )
+    {
+        $homeLocationId = $this->getConfigResolver()->getParameter('root_location_id', 'partialcontent');
+        if (!$subTreeLocationId) {
+            $subTreeLocationId = $homeLocationId;
+        }
+
+        if (!count($contentTypeIdentifiers)) {
+            $contentTypeIdentifiers = $this->getConfigResolver()->getParameter('menu_content_types', 'partialcontent');
+        }
+        echo "[[$selected]]";
+
+        //Retrieve the location service from the Symfony container
+        $locationService = $this->getRepository()->getLocationService();
+
+        //Load the called location (node) from the repository based on the ID
+        $root = $locationService->loadLocation( $subTreeLocationId );
+
+        //Set the etag and modification date on the response
+        $response = $this->buildResponse(
+            __METHOD__ . $subTreeLocationId . '-' . $selected,
+            $root->contentInfo->modificationDate
+        );
+
+        //If nothing has been modified, return a 304
+        if ( $response->isNotModified( $this->getRequest() ) )
+        {
+            return $response;
+        }
+
+        //Retrieve a subtree fetch of the latest posts
+        $results = $this->fetchSubTree(
+            $root,
+            $contentTypeIdentifiers,
+            array(new SortClause\LocationPriority()),
+            false
+        );
+
+        //Convert the results from a search result object into a simple array
+        $locations = array();
+        foreach ( $results->searchHits as $hit )
+        {
+            $locations[] = $locationService->loadLocation($hit->valueObject->contentInfo->mainLocationId);
+        }
+
+        $response->headers->set( 'X-Location-Id', $subTreeLocationId );
+
+        //Render the output
+        return $this->render(
+            'BlendPartialContentBundle::top_menu.html.twig',
+            array(
+                'root' => $root,
+                'locations' => $locations,
+                'selectedLocationId' => $selected,
+                'homeLocationId' => $homeLocationId
+            ),
+            $response
+        );
+
+    }
+
 
     /**
      * A convenience method to provide a simple method for retrieving selected objects.
@@ -105,6 +171,7 @@ class BlogController extends APIViewController
         \eZ\Publish\API\Repository\Values\Content\Location $subTreeLocation,
         array $typeIdentifiers=array(),
         array $sortMethods=array(),
+        $searchTree = true,
         $limit = null,
         $offset = 0
     )
@@ -113,15 +180,20 @@ class BlogController extends APIViewController
         //Access the search service provided by the eZ Repository (Public API)
         $searchService = $this->getRepository()->getSearchService();
 
+        $criterion = array(
+            new Criterion\ContentTypeIdentifier( $typeIdentifiers )
+        );
+
+        if ($searchTree) {
+            $criterion[] = new Criterion\Subtree( $subTreeLocation->pathString );
+        } else {
+            $criterion[] = new Criterion\ParentLocationId( $subTreeLocation->id );
+        }
+
         //Construct a query
         $query = new Query();
         $query->criterion = new Criterion\LogicalAnd(
-            array(
-                new Criterion\Subtree( $subTreeLocation->pathString ),
-                new Criterion\ContentTypeId(
-                    $this->typeIdentifiersToIds( $typeIdentifiers )
-                ),
-            )
+            $criterion
         );
         if ( !empty( $sortMethods ) )
         {
@@ -132,35 +204,6 @@ class BlogController extends APIViewController
 
         //Return the content from the repository
         return $searchService->findContent( $query );
-    }
-
-
-    /**
-     * Given an array of type identifier strings, return an array of the numeric Ids
-     * @param array $identifiers array of content type identifier strings (class identifiers)
-     * @return array
-     * @todo Factor this method out as a service to be used by other controllers
-     */
-    protected function typeIdentifiersToIds( array $identifiers )
-    {
-        $ids = array();
-        foreach ( $identifiers as $identifier )
-        {
-            if ( is_numeric( $identifier ) )
-            {
-                $ids[] = $identifier;
-            }
-            else
-            {
-                //Extract the ID from the repository
-                $ids[] = $this
-                    ->getRepository()
-                    ->getContentTypeService()
-                    ->loadContentTypeByIdentifier( $identifier )
-                    ->id;
-            }
-        }
-        return $ids;
     }
 
 }
