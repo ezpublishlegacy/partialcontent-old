@@ -30,7 +30,7 @@
         class="main-header"
         style="background-image: url('{% block header_image %}{% spaceless %}
                 {% set headerImage = ez_image_alias(header_image, surround.versionInfo, 'headerimage') %}
-                {{ path(headerImage.uri) }}
+                /{{ headerImage.uri }}
                 {% endspaceless %}{% endblock %}');"
         >
     {# The block defines a piece of the template that can be overridden by other templates #}
