@@ -3,7 +3,7 @@ imports:
 
 ezpublish:
     siteaccess:
-        default_siteaccess: eng
+        default_siteaccess: ezdemo_site_user
         list:
             - ezdemo_site_user
             - eng

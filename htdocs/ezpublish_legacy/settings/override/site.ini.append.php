@@ -23,7 +23,7 @@ ActiveExtensions[]=ezprestapiprovider
 SessionNameHandler=custom
 
 [SiteSettings]
-DefaultAccess=eng
+DefaultAccess=ezdemo_site_user
 SiteList[]
 SiteList[]=ezdemo_site_user
 SiteList[]=eng
